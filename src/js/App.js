@@ -65,7 +65,7 @@ class App extends React.Component {
     return (
       <div>
           <header>
-              <img src={image} />
+              <img src={image} alt="Data transfer logo" />
               <h1>Fetching Data <button className="btn btn-sm btn-danger" onClick={(e) => {
                 this.fetchData()
               }}>Fetch now</button></h1>
