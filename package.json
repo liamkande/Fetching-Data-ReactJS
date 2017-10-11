@@ -1,7 +1,7 @@
 {
   "name": "fetching-data-with-react",
   "version": "1.0.0",
-  "description": "Fetching Data from API with React.js and related tools.",
+  "description": "Fetching Data from API with ReactJS and related tools.",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
@@ -35,6 +35,8 @@
     "webpack-dev-server": "2.9.1"
   },
   "dependencies": {
+    "es6-promise": "^4.1.1",
+    "isomorphic-fetch": "^2.2.1",
     "prop-types": "15.6.0",
     "react": "16.0.0",
     "react-dom": "16.0.0"

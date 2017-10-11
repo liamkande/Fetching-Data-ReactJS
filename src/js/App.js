@@ -2,6 +2,7 @@ import React from 'react'
 import image from '../images/cloud-upload-download-data-transfer.svg'
 import Collapsible from './Collapsible'
 
+
 class App extends React.Component {
 
   constructor(props){
@@ -18,8 +19,18 @@ class App extends React.Component {
     })
   }
   componentDidMount(){
-    !localStorage.getItem('contacts') ? this.fetchData()
-    : console.log('using data from localStorage')
+    const date = localStorage.getItem('contactsDate')
+    const contactsDate = date && new Date(parseInt(date))
+    const now = new Date()
+
+    const dataAge = Math.round((now - contactsDate) / (1000 * 60)) // value in minutes
+    const tooOld = dataAge >=5
+
+    tooOld ? this.fetchData()
+    : console.log(`using data from localStorage that are ${dataAge} minutes old.`)
+
+    //!localStorage.getItem('contacts') ? this.fetchData()
+    //: console.log('using data from localStorage')
   }
   componentWillUpdate(nextProps, nextState){
     localStorage.setItem('contacts', JSON.stringify(nextState.contacts))
@@ -30,7 +41,6 @@ class App extends React.Component {
           isLoading: true,
           contacts: []
       })
-
       fetch('https://randomuser.me/api/?results=05&nat=us,dk,fr,gb')
       .then(response => response.json())
       .then(parsedJSON => parsedJSON.results.map(user => (
@@ -50,31 +60,33 @@ class App extends React.Component {
       .catch(error => console.log('parsing failed', error))
   }
 
-    render() {
-      const {isLoading, contacts} = this.state
-      return (
-        <div>
-            <header>
-                <img src={image} />
-                <h1>Fetching Data <button className="btn btn-sm btn-danger">Fetch now</button></h1>
-            </header>
-            <div className={`content ${isLoading ? 'is-loading' : ''}`}>
-                <div className="panel-group">
-                    {
-                        !isLoading && contacts.length > 0 ? contacts.map(contact => {
-                            const {username, name, email, picture, location} = contact
-                            return <Collapsible key={username} title={name}>
-                              <img src={picture} className="pull-left"/>
-                                <p className="pull-right">{email}<br /><strong>City: </strong>{location}</p>
-                            </Collapsible>
-                        }) : null
-                    }
-                </div>
-                <div className="loader">
-                    <div className="icon"></div>
-                </div>
-            </div>
-        </div>
+  render() {
+    const {isLoading, contacts} = this.state
+    return (
+      <div>
+          <header>
+              <img src={image} />
+              <h1>Fetching Data <button className="btn btn-sm btn-danger" onClick={(e) => {
+                this.fetchData()
+              }}>Fetch now</button></h1>
+          </header>
+          <div className={`content ${isLoading ? 'is-loading' : ''}`}>
+              <div className="panel-group">
+                  {
+                      !isLoading && contacts.length > 0 ? contacts.map(contact => {
+                          const {username, name, email, picture, location} = contact
+                          return <Collapsible key={username} title={name}>
+                            <img src={picture} className="pull-left"/>
+                              <p className="pull-right">{email}<br /><strong>City: </strong>{location}</p>
+                          </Collapsible>
+                      }) : null
+                  }
+              </div>
+              <div className="loader">
+                  <div className="icon"></div>
+              </div>
+          </div>
+      </div>
     );
   }
 }
